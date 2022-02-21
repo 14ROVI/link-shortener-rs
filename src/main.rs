@@ -58,6 +58,14 @@ async fn index() -> impl Responder {
 }
 
 
+#[get("/script.js")]
+async fn script() -> impl Responder {
+    HttpResponse::Ok()
+        .content_type("text/javascript; charset=utf-8")
+        .body(fs::read_to_string("./html/script.js").unwrap())
+}
+
+
 #[get("/{uri}")]
 async fn redirect(
     pool: web::Data<Pool>,
@@ -94,6 +102,7 @@ async fn main() -> std::io::Result<()> {
             .data(pool.clone())
             .service(redirect)
             .service(index)
+            .service(script)
             .service(shorten)
     })
     .bind("127.0.0.1:8080")?
