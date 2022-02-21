@@ -65,6 +65,13 @@ async fn script() -> impl Responder {
         .body(fs::read_to_string("./html/script.js").unwrap())
 }
 
+#[get("/style.css")]
+async fn style() -> impl Responder {
+    HttpResponse::Ok()
+        .content_type("text/plain; charset=utf-8")
+        .body(fs::read_to_string("./html/style.css").unwrap())
+}
+
 
 #[get("/{uri}")]
 async fn redirect(
@@ -103,6 +110,7 @@ async fn main() -> std::io::Result<()> {
             .service(redirect)
             .service(index)
             .service(script)
+            .service(style)
             .service(shorten)
     })
     .bind("127.0.0.1:8080")?
